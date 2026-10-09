@@ -7,7 +7,7 @@
 
     <!-- Bootstrap 5 CSS untuk Layout Modern -->
     <link href="https://jsdelivr.net" rel="stylesheet">
-    <!-- FontAwesome untuk Ikon Menara & Reset -->
+    <!-- FontAwesome untuk Ikon Menara, Grafik, & Setelan -->
     <link rel="stylesheet" href="https://cloudflare.com">
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com" />
@@ -20,7 +20,7 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; margin: 0; padding: 0; }
         
-        /* Merapikan Sidebar Kiri Agar Terkunci di Samping */
+        /* Layout Grid Sidebar Kiri */
         .sidebar-wrapper {
             background-color: #1e3a8a; 
             color: #f8fafc; 
@@ -37,20 +37,23 @@
         .main-title { color: #1e293b; font-size: 26px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 4px; }
         .sub-title { color: #64748b; font-size: 13px; margin-bottom: 30px; }
         
-        /* Kartu Metrik Flat */
+        /* Kartu Metrik Statistik (Flat & Clean) */
         .metric-card { background: transparent; border: none; padding: 5px 0; }
         .metric-label { font-size: 13px; color: #64748b; font-weight: 400; }
         .metric-value { font-size: 28px; color: #1e293b; font-weight: 700; margin-top: 2px; }
         
-        /* Peta & Wadah */
-        #map { height: 520px; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 35px; background: #e0e0e0; }
+        /* Kontainer Peta & Wadah Grafik */
+        #map { height: 500px; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 35px; }
+        .chart-container { background: white; border-radius: 6px; border: 1px solid #e2e8f0; padding: 20px; height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        /* Tabel */
+        /* Tabel Data Tabular */
         .table-container { background: white; border-radius: 6px; border: 1px solid #e2e8f0; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
         .table th { font-size: 13px; color: #64748b; text-transform: lowercase; font-weight: 600; background-color: #f8fafc; padding: 12px; }
         .table td { font-size: 13px; color: #334155; vertical-align: middle; padding: 12px; }
         
-        /* Kustomisasi Tombol Kotak Reset di Peta */
+        /* Kustomisasi Ikon Marker & Alat Ukur Peta */
+        .custom-tower-icon { text-align: center; line-height: 30px; }
+        .custom-tower-icon i { color: #1e3a8a; font-size: 18px; text-shadow: 0 0 3px #ffffff; }
         .leaflet-control-custom { background-color: white; width: 34px; height: 34px; line-height: 34px; text-align: center; cursor: pointer; font-size: 15px; border-radius: 4px; box-shadow: 0 1px 5px rgba(0,0,0,0.2); }
     </style>
 </head>
@@ -60,7 +63,7 @@
     <div class="row">
         <!-- SIDEBAR KONTROL SPASIAL (Kolom Kiri) -->
         <div class="col-md-3 col-lg-2 sidebar-wrapper">
-            <!-- Logo Resmi Kota Bandung & Semboyan -->
+            <!-- Logo Resmi Kota Bandung & Semboyan Resmi -->
             <div class="text-center mb-4">
                 <img src="https://wikimedia.org" alt="Logo Kota Bandung" class="img-fluid mb-2" style="max-height: 85px;">
                 <div style="font-size: 10px; font-weight: bold; letter-spacing: 1px; color: #fde047;">GEMAH RIPAH WIBAWA MUKTI</div>
@@ -68,7 +71,7 @@
             
             <h2><i class="fa-solid fa-gear me-2"></i>Kontrol Spasial</h2>
             
-            <!-- Dropdown Filter Kontrol -->
+            <!-- Dropdown Penyelarasan Filter -->
             <div class="mb-2">
                 <label for="filterKecamatan">Wilayah Kecamatan:</label>
                 <select id="filterKecamatan" class="form-select" onchange="jalankanFilter()">
@@ -136,9 +139,19 @@
                 </div>
             </div>
 
-            <!-- PETA INTERAKTIF -->
-            <h5 class="mb-3 fw-bold text-secondary"><i class="fa-solid fa-map me-2"></i>Visualisasi Peta Persebaran Menara</h5>
-            <div id="map"></div>
+            <!-- LAYOUT PETA & GRAFIK BERSISIAN -->
+            <div class="row mb-4">
+                <div class="col-lg-8">
+                    <h5 class="mb-3 fw-bold text-secondary"><i class="fa-solid fa-map me-2"></i>Visualisasi Peta Persebaran Menara</h5>
+                    <div id="map"></div>
+                </div>
+                <div class="col-lg-4">
+                    <h5 class="mb-3 fw-bold text-secondary"><i class="fa-solid fa-chart-pie me-2"></i>Persentase Pemilik Menara</h5>
+                    <div class="chart-container">
+                        <canvas id="chartPemilik"></canvas>
+                    </div>
+                </div>
+            </div>
 
             <!-- TABEL DATA TABULAR -->
             <h5 class="mb-3 fw-bold text-secondary"><i class="fa-solid fa-table me-2"></i>Detail Data Tabular Menara</h5>
@@ -160,7 +173,7 @@
                         </tr>
                     </thead>
                     <tbody id="bodyTabel">
-                        <!-- Data rows dimasukkan melalui JavaScript -->
+                        <!-- Data dimasukkan via JS -->
                     </tbody>
                 </table>
                 <div id="warningTabel" class="alert alert-warning d-none mt-2">
@@ -175,28 +188,3 @@
 <!-- SCRIPT LIBRARIES & LOGIKA SPASIAL JAVASCRIPT -->
 <!-- ======================================================== -->
 <script src="https://jquery.com"></script>
-<script src="https://unpkg.com"></script>
-<script src="https://unpkg.com"></script>
-<script src="https://jsdelivr.net"></script>
-
-<script>
-    const LAT_AWAL = -6.9175;
-    const LONG_AWAL = 107.6191;
-    const ZOOM_AWAL = 12;
-
-    let map, markerCluster, batasKotaLayer;
-    let dataBtsRaw = [];
-
-    // Inisialisasi Peta Leaflet
-    map = L.map('map').setView([LAT_AWAL, LONG_AWAL], ZOOM_AWAL);
-    
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{y}/{x}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    // Pengukur Jarak & Luas
-    const measureControl = new L.Control.Measure({
-        position: 'topright',
-        primaryLengthUnit: 'meters',
-        secondaryLengthUnit: 'kilometers',
-        primaryAreaUnit: 'sqmeters',
