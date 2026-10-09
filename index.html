@@ -20,27 +20,29 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; overflow-x: hidden; }
         
-        /* Desain Sidebar Biru Tua Menyesuaikan Kode Streamlit */
+        /* Desain Sidebar Biru Tua Menyesuaikan Gambar */
         .sidebar { background-color: #1e3a8a; color: #f8fafc; min-height: 100vh; padding: 20px; }
-        .sidebar h2 { color: #f8fafc; font-size: 15px; font-weight: 500; margin-bottom: 15px; }
-        .sidebar label { color: #cbd5e1; font-weight: 500; font-size: 14px; margin-top: 10px; }
-        .sidebar .form-select { background-color: #ffffff; color: #1e293b; border: none; font-size: 14px; }
-        .sidebar-footer { font-size: 11px; color: #94a3b8; margin-top: 30px; border-top: 1px solid #3b82f6; padding-top: 15px; }
+        .sidebar h2 { color: #f8fafc; font-size: 14px; font-weight: 500; margin-bottom: 15px; margin-top: 15px; }
+        .sidebar label { color: #cbd5e1; font-weight: 500; font-size: 12px; margin-top: 12px; margin-bottom: 4px; }
+        .sidebar .form-select { background-color: #ffffff; color: #1e293b; border: 1px solid #cbd5e1; font-size: 13px; border-radius: 6px; }
+        .sidebar-footer { font-size: 10px; color: #94a3b8; margin-top: 40px; border-top: 1px solid #3b82f6; padding-top: 15px; line-height: 1.4; }
         
         /* Konten Utama */
-        .main-title { color: #1e293b; font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 2px; }
-        .sub-title { color: #64748b; font-size: 14px; margin-bottom: 25px; }
+        .main-title { color: #1e293b; font-size: 24px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 2px; }
+        .sub-title { color: #64748b; font-size: 12px; margin-bottom: 25px; }
         
-        /* Kartu Metrik */
-        .metric-card { background: white; border-radius: 8px; border: 1px solid #e2e8f0; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .metric-label { font-size: 13px; color: #64748b; font-weight: 500; }
-        .metric-value { font-size: 22px; color: #1e293b; font-weight: 700; margin-top: 5px; }
+        /* Kartu Metrik Flat Sesuai Gambar */
+        .metric-card { background: transparent; border: none; padding: 5px 0; }
+        .metric-label { font-size: 12px; color: #64748b; font-weight: 400; }
+        .metric-value { font-size: 26px; color: #1e293b; font-weight: 700; margin-top: 2px; }
         
         /* Peta & Wadah */
-        #map { height: 500px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); margin-bottom: 25px; }
+        #map { height: 520px; border-radius: 4px; border: 1px solid #e2e8f0; margin-bottom: 30px; }
         
         /* Tabel */
-        .table-container { background: white; border-radius: 8px; border: 1px solid #e2e8f0; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .table-container { background: white; border-radius: 6px; border: 1px solid #e2e8f0; padding: 10px; }
+        .table th { font-size: 12px; color: #64748b; text-transform: lowercase; font-weight: 600; background-color: #f8fafc; }
+        .table td { font-size: 12px; color: #334155; vertical-align: middle; }
         
         /* Kustomisasi Tombol Kotak Reset di Peta */
         .leaflet-control-custom { background-color: white; width: 34px; height: 34px; line-height: 34px; text-align: center; cursor: pointer; font-size: 15px; border-radius: 4px; box-shadow: 0 1px 5px rgba(0,0,0,0.4); }
@@ -52,46 +54,55 @@
     <div class="row">
         <!-- SIDEBAR KONTROL SPASIAL -->
         <div class="col-md-3 col-lg-2 sidebar">
-            <!-- Tempat Logo Diskominfo -->
-            <div class="text-center mb-3">
-                <img src="logo_diskominfo.png" alt="Logo Diskominfo" class="img-fluid" style="max-height: 70px; onerror: this.style.display='none'">
+            <!-- Logo Resmi Kota Bandung & Semboyan Sesuai Gambar -->
+            <div class="text-center mb-4">
+                <img src="https://wikimedia.org" alt="Logo Kota Bandung" class="img-fluid mb-2" style="max-height: 90px;">
+                <div style="font-size: 10px; font-weight: bold; letter-spacing: 1px; color: #fde047;">GEMAH RIPAH WIBAWA MUKTI</div>
             </div>
             
-            <h2>⚙️ Kontrol Spasial</h2>
+            <h2><i class="fa-solid fa-gear me-2"></i>Kontrol Spasial</h2>
             
-            <!-- Elemen Filter Dropdown (Menggantikan Multiselect Streamlit) -->
-            <div class="mb-3">
+            <!-- Form Dropdown Filter -->
+            <div class="mb-2">
                 <label for="filterKecamatan">Wilayah Kecamatan:</label>
                 <select id="filterKecamatan" class="form-select" onchange="jalankanFilter()">
-                    <option value="Semua">Semua Kecamatan...</option>
+                    <option value="Semua">Pilih atau ketik Kecamatan...</option>
                 </select>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
+                <label for="filterKelurahan">Wilayah Kelurahan:</label>
+                <select id="filterKelurahan" class="form-select" onchange="jalankanFilter()">
+                    <option value="Semua">Pilih atau ketik Kelurahan...</option>
+                </select>
+            </div>
+
+            <div class="mb-2">
                 <label for="filterProvider">Provider / Pemilik:</label>
                 <select id="filterProvider" class="form-select" onchange="jalankanFilter()">
-                    <option value="Semua">Semua Provider...</option>
+                    <option value="Semua">Pilih atau ketik Provider...</option>
                 </select>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="filterStruktur">Jenis Struktur:</label>
                 <select id="filterStruktur" class="form-select" onchange="jalankanFilter()">
-                    <option value="Semua">Semua Struktur...</option>
+                    <option value="Semua">Pilih atau ketik Jenis Struktur...</option>
                 </select>
             </div>
 
             <div class="sidebar-footer">
-                Diskominfo Kota Bandung<br>v1.5.1 (Leaflet JS Ported)
+                Diskominfo Kota Bandung<br>
+                v1.5.1 (Leaflet JS Ported)
             </div>
         </div>
 
         <!-- KONTEN DASHBOARD UTAMA -->
         <div class="col-md-9 col-lg-10 p-4">
             <div class="main-title">Geographic Information System Menara BTS Kota Bandung 2025</div>
-            <div class="sub-title">Data Pemetaan Infrastruktur Menara Telekomunikasi Kota Bandung</div>
+            <div class="sub-title">Data Pemetaan Infrastruktur | Menara Telekomunikasi Kota Bandung</div>
 
-            <!-- KARTU METRIK STATISTIK -->
+            <!-- KARTU METRIK STATISTIK FLAT -->
             <div class="row g-3 mb-4">
                 <div class="col-6 col-lg-3">
                     <div class="metric-card">
@@ -113,34 +124,37 @@
                 </div>
                 <div class="col-6 col-lg-3">
                     <div class="metric-card">
-                        <div class="metric-label">Total Struktur Terfilter</div>
+                        <div class="metric-label">Total Struktur Menara Terfilter</div>
                         <div id="m4" class="metric-value">0</div>
                     </div>
                 </div>
             </div>
 
             <!-- PETA INTERAKTIF -->
-            <h3>🗺️ Visualisasi Peta Persebaran Menara</h3>
+            <h5 class="mb-3 fw-bold text-secondary"><i class="fa-solid fa-map me-2"></i>Visualisasi Peta Persebaran Menara</h5>
             <div id="map"></div>
 
             <!-- TABEL DATA TABULAR -->
-            <h3>📊 Detail Data Tabular Menara</h3>
+            <h5 class="mb-3 fw-bold text-secondary"><i class="fa-solid fa-table me-2"></i>Detail Data Tabular Menara</h5>
             <div class="table-container table-responsive">
-                <table class="table table-hover table-striped mb-0" id="tabelMenara">
-                    <thead class="table-light">
+                <table class="table table-hover mb-0" id="tabelMenara">
+                    <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Kecamatan</th>
-                            <th>Kelurahan</th>
-                            <th>Pemilik Menara</th>
-                            <th>Lokasi Menara</th>
-                            <th>Struktur Tower</th>
-                            <th>Tinggi</th>
-                            <th>Tahun</th>
+                            <th>id</th>
+                            <th>nama_provinsi</th>
+                            <th>nama_kabupaten_kota</th>
+                            <th>nama_kecamatan</th>
+                            <th>nama_desa_kelurahan</th>
+                            <th>pemilik_menara</th>
+                            <th>lokasi_menara</th>
+                            <th>struktur_menara</th>
+                            <th>tinggi_menara</th>
+                            <th>satuan</th>
+                            <th>tahun</th>
                         </tr>
                     </thead>
                     <tbody id="bodyTabel">
-                        <!-- Data dimasukkan via JS -->
+                        <!-- Data rows dimasukkan melalui JavaScript -->
                     </tbody>
                 </table>
                 <div id="warningTabel" class="alert alert-warning d-none mt-2">
@@ -154,27 +168,27 @@
 <!-- ======================================================== -->
 <!-- SCRIPT LIBRARIES & LOGIKA SPASIAL JAVASCRIPT -->
 <!-- ======================================================== -->
+<script src="https://jquery.com"></script>
 <script src="https://unpkg.com"></script>
 <script src="https://unpkg.com"></script>
 <script src="https://jsdelivr.net"></script>
 
 <script>
-    // Koordinat Awal Kota Bandung
     const LAT_AWAL = -6.9175;
     const LONG_AWAL = 107.6191;
     const ZOOM_AWAL = 12;
 
     let map, markerCluster, batasKotaLayer;
-    let dataBtsRaw = []; // Menyimpan master data titik BTS
+    let dataBtsRaw = [];
 
-    // 1. Inisialisasi Peta Leaflet Dasar
+    // 1. Inisialisasi Peta
     map = L.map('map').setView([LAT_AWAL, LONG_AWAL], ZOOM_AWAL);
     
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{y}/{x}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // 2. Tambah Alat Ukur (Measure Control) di Kanan Atas (Topright)
+    // 2. Control Measure (Alat Ukur)
     const measureControl = new L.Control.Measure({
         position: 'topright',
         primaryLengthUnit: 'meters',
@@ -186,26 +200,6 @@
     });
     map.addControl(measureControl);
 
-    // 3. Tambah Tombol Kotak Reset di Kiri Atas (Topleft)
+    // 3. Tombol Reset Kamera (Kiri Atas)
     const customControl = L.control({ position: 'topleft' });
     customControl.onAdd = function() {
-        let div = L.DomUtil.create('div', 'leaflet-bar leaflet-control-custom');
-        div.innerHTML = '<i class="fa-regular fa-square" style="color: #333333;"></i>';
-        div.title = 'Kembali ke Posisi Awal';
-        div.onclick = function() {
-            map.setView([LAT_AWAL, LONG_AWAL], ZOOM_AWAL);
-        };
-        return div;
-    };
-    customControl.addTo(map);
-
-    // Inisialisasi Layer Cluster untuk Penampung Marker Menara
-    markerCluster = L.markerClusterGroup({ maxClusterRadius: 35, disableClusteringAtZoom: 14 }).addTo(map);
-
-    // 4. Pengisian Data & Hubungan Berkas GeoJSON (Menggantikan fungsi read_json Python)
-    document.addEventListener("DOMContentLoaded", function() {
-        // Ambil File Batas Administrasi Kota Bandung
-        fetch('batas_kota_bandung.geojson')
-            .then(res => res.json())
-            .then(geojsonData => {
-                batasKotaLayer = L.geoJSON(geojsonData, {
